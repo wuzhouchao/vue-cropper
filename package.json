@@ -12,9 +12,12 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "hard-source-webpack-plugin": "^0.13.1",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^10.1.0",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
-    "vue-router": "^4.0.0-0"
+    "vue-router": "^4.0.0-0",
+    "vue-slider-component": "^3.2.10"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
