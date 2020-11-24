@@ -4,7 +4,12 @@
     <vue-cropper
       ref="cropper"
       :img="options.img"
-    ></vue-cropper>
+      :wrapper="options.wrapper"
+    >
+      <template v-slot:loading>
+        <p name="loading">加载中..</p>
+      </template>
+    </vue-cropper>
   </section>
 </template>
 
@@ -18,7 +23,11 @@ export default {
   },
   setup() {
     const options = ref({
-      img: 'http://cdn.xyxiao.cn/goodboy.jpg'
+      img: 'http://cdn.xyxiao.cn/goodboy.jpg',
+      wrapper: {
+        width: '400px',
+        height: '400px'
+      }
     })
 
     onMounted(() => {

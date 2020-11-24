@@ -1,15 +1,32 @@
 import { onMounted, ref } from 'vue'
 import { InterfaceLayout } from './interface'
+import {
+  loadImg,
+  getExif,
+  resetImg,
+  createImgStyle,
+  translateStyle,
+  loadFile,
+  getCropImgData,
+  detectionBoundary,
+  setAnimation,
+} from './common'
+import cropperLoading from './loading'
 
 import './style/index.scss'
 
-interface vueCropperProps {
+interface InterfaceVueCropperProps {
   img: string
   wrapper: InterfaceLayout
 }
+
 const vueCropper = {
   // 名称
   name: 'vue-cropper',
+
+  components: {
+    cropperLoading
+  },
 
   props: {
     img: String,
@@ -25,12 +42,36 @@ const vueCropper = {
   },
 
   // 组件处理
-  setup(props: vueCropperProps) {
+  setup(props: InterfaceVueCropperProps, { slots }: any) {
+    // 图片加载loading
+    const imgLoading = ref(false)
 
-    const isLoading = ref(false)
+    // 真实图片渲染地址
+    const imgs = ref('')
+
+    // 检查图片, 修改图片为正确角度
+    const checkedImg = async (url: string) => {
+      imgLoading.value = true
+      let img: HTMLImageElement
+      // 首先去加载当前图片
+      try {
+        img = await loadImg(url)
+      } catch (error) {
+        imgLoading.value = false
+        return false
+      }
+      imgs.value = url
+      imgLoading.value = false
+    }
+
 
     onMounted(() => {
-      console.log('mounted', props)
+      if (props.img) {
+        checkedImg(props.img)
+      } else {
+        imgs.value = ''
+      }
+      console.log('mounted', JSON.stringify(props))
     })
 
     return () => (
@@ -38,29 +79,23 @@ const vueCropper = {
         class="vue-cropper"
         style={props.wrapper}
       >
-        {/* 加载动画 */}
-        {isLoading ? (
-          <section class="cropper-loading">
-            <p class="cropper-loading-spin">
-              <i>
-                <svg
-                  viewBox="0 0 1024 1024"
-                  focusable="false"
-                  data-icon="loading"
-                  width="1.5em"
-                  height="1.5em"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path d="M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 0 0-94.3-139.9 437.71 437.71 0 0 0-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z" />
-                </svg>
-              </i>
-              <span />
-            </p>
+        {
+          imgs.value ?
+          <section class="cropper-box cropper-fade-in">
+            {/* 图片展示框 */}
+            <section class="cropper-box-canvas">
+              <img src={imgs.value} alt="vue-cropper" />
+            </section>
           </section>
-        ) : (
-          ''
-        )}
+          : ''
+        }
+
+        {/* 加载动画 */}
+        <cropper-loading
+          isVisible={imgLoading.value}
+        >
+        { slots.loading && slots.loading() }
+        </cropper-loading>
       </section>
     )
   }
