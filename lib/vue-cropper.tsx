@@ -1,4 +1,4 @@
-import { onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { InterfaceLayout } from './interface'
 import {
   loadImg,
@@ -61,7 +61,9 @@ const vueCropper = {
         return false
       }
       imgs.value = url
-      imgLoading.value = false
+      nextTick(() => {
+        imgLoading.value = false
+      })
     }
 
 

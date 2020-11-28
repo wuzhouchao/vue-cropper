@@ -100,7 +100,7 @@
 
       i {
         svg {
-          animation: cropperLoadingCircle 1s infinite linear;
+          animation: cropperLoadingCircle 1.2s infinite ease-out;
         }
       }
     }
@@ -108,7 +108,8 @@
 
   .cropper-fade-in {
     animation-name: cropperFadeIn;
-    animation-duration: 0.75s;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
   }
 }
 
