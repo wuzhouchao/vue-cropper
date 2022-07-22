@@ -578,14 +578,21 @@ export default {
       }
 
       if (this.isIE) {
-        var xhr = new XMLHttpRequest();
-        xhr.onload = function() {
-          var url = URL.createObjectURL(this.response);
-          img.src = url;
-        };
-        xhr.open("GET", this.img, true);
-        xhr.responseType = "blob";
-        xhr.send();
+      	//this.img可能为base64,导致请求报错 
+	try {
+	   var xhr = new XMLHttpRequest();
+           xhr.onload = function() {
+             var url = URL.createObjectURL(this.response);
+             img.src = url;
+           };
+           xhr.open("GET", this.img, true);
+           xhr.responseType = "blob";
+           xhr.send();
+	}catch(){
+	   img.src = this.img;
+	}
+	
+ 
       } else {
         img.src = this.img;
       }
